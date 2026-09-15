@@ -1,0 +1,1 @@
+{"name":"sourcepoint-website-astra","private":true,"version":"0.1.0","type":"module","scripts":{"build":"node build.mjs","dev":"npm run build && python3 -m http.server 4173 --directory dist","deploy":"npm run build && npx wrangler@4 deploy"}}
