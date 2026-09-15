@@ -1,5 +1,7 @@
 import {mkdir,writeFile,cp,rm} from 'node:fs/promises';
 import {series} from './src/catalog.mjs';
+import {elementPage} from './src/element.mjs';
+import {mediaUrl} from './src/element-media.mjs';
 await rm('dist',{recursive:true,force:true}); await mkdir('dist',{recursive:true}); await cp('public','dist',{recursive:true});
 const link=(url,text,cls='')=>`<a class="${cls}" href="${url}">${text}</a>`;
 const button=(url,text)=>link(url,text+' <span aria-hidden="true">↗</span>','button');
@@ -23,6 +25,7 @@ pages.set('/contact/',['Contact',intro('Let’s talk','Your next opening<br>star
 pages.set('/find-a-dealer/',['Find a dealer',intro('Connect locally','Find your<br>SourcePoint connection.','Share your location and the products you’re interested in.')+`<section class="form-layout"><aside><h2>Start with the right series.</h2><p>Browse our collections while the dealer directory is being prepared.</p>${link('/catalog/','Explore all six series ↗','text-link')}</aside>${form(field('Name')+field('Company name')+field('Email','email')+field('Phone','tel')+field('ZIP code','text','zip'))}</section>`]);
 pages.set('/become-a-dealer/',['Become a dealer',intro('Trade partnerships','Let’s build<br>your next opportunity.','Introduce your business to SourcePoint and explore a dealer relationship.')+`<section class="form-layout"><aside><span class="eyebrow">Built for the trade</span><h2>Six collections.<br>One conversation.</h2><p>Tell us about your business, your customers, and the product series you’re interested in.</p></aside>${form(field('Company name')+field('Business type')+field('Contact name')+field('Email','email')+field('Phone','tel')+field('City')+field('State')+field('ZIP code','text','zip'))}</section>`]);
 pages.set('/404.html',['Page not found',intro('404','This opening<br>leads elsewhere.','The page you’re looking for could not be found.')+`<section class="section">${button('/','Return home')}</section>`]);
+pages.set('/series/element/',['Element aluminum folding doors',elementPage(mediaUrl)]);
 for(const [path,[title,body]]of pages){const file=path.endsWith('.html')?'dist'+path:'dist'+path+'index.html';await mkdir(file.slice(0,file.lastIndexOf('/')),{recursive:true});await writeFile(file,shell(title,body));}
 await writeFile('dist/robots.txt','User-agent: *\nDisallow: /\n');
 console.log(`Built ${pages.size} pages. Draft remains noindex until launch review.`);
