@@ -639,6 +639,12 @@ textarea:focus-visible {
   }
 }
 @media (max-width: 760px) {
+  /* Keep mobile calls to action text-only. */
+  .button > span[aria-hidden='true'],
+  .card-end > span[aria-hidden='true'] {
+    display: none;
+  }
+
   .topline {
     font-size: 10px;
     gap: 10px;
