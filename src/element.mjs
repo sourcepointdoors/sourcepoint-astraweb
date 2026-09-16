@@ -63,16 +63,18 @@ export function elementPage(mediaUrl = '') {
   <div class="element-stage"><div class="element-stage-inner"><div class="element-stage-top"><span class="eyebrow">Element / In perspective</span><a href="#element-sizes">Skip to sizes ↓</a></div><div class="element-media"><img src="/assets/element.webp" width="1080" height="1080" alt="Element aluminum folding door shown partially open" class="element-poster">${mediaUrl ? `<video id="element-orbit" muted playsinline preload="metadata" poster="/assets/element.webp" aria-label="Illustrative rotating view of the Element folding door"><source src="${mediaUrl}" type="video/mp4"></video>` : ''}</div><div class="element-stage-bottom"><span class="mono" id="element-counter" aria-hidden="true">01 / 06</span><span id="element-scroll-hint">Scroll to explore the details</span><button id="element-motion" type="button" aria-pressed="false">Pause rotation</button></div><div class="element-progress" aria-hidden="true"><span></span></div><small class="element-visual-note">Illustrative product view. Configuration shown may vary.</small></div></div>
   <div class="element-chapters">${features.map(([num, title, label, body, tag]) => `<article class="element-chapter"><span class="eyebrow">${num} / ${label}</span><h2>${title}</h2><p>${body}</p><span class="element-tag mono">${tag}</span></article>`).join('')}</div>
  </section>
- <section class="element-sizes section" id="element-sizes"><div class="section-heading"><div><span class="eyebrow">Fit the opening</span><h2>Your space.<br>Your configuration.</h2></div><p>Stock size options in two heights.<br>Special-order sizes and configurations on request.</p></div><div class="element-size-controls"><label for="element-height">Choose height</label><select id="element-height"><option value="80">80 inches</option><option value="96">96 inches</option></select><span>All dimensions shown in inches.</span></div><div class="element-table-wrap"><table><caption>Element folding door stock size options</caption><thead><tr><th scope="col">Width × height</th><th scope="col">Panels</th><th scope="col">Configurations</th><th scope="col">Operation</th></tr></thead><tbody>${[
+ <section class="element-sizes section" id="element-sizes"><div class="section-heading"><div><span class="eyebrow">Fit the opening</span><h2>Your space.<br>Your configuration.</h2></div><p>Stock size options in two heights.<br>Special-order sizes and configurations on request.</p></div><p class="element-size-note">All dimensions shown in inches.</p><div class="element-table-wrap"><table><caption>Element folding door stock size options</caption><thead><tr><th scope="col">Width × height</th><th scope="col">Panels</th><th scope="col">Configurations</th><th scope="col">Operation</th></tr></thead><tbody>${[
    [72, 2, '2L / 2R'],
    [96, 3, '3L / 3R'],
    [108, 3, '3L / 3R'],
    [120, 4, '1L3R / 1R3L'],
    [144, 4, '1L3R / 1R3L'],
  ]
-   .map(
-     ([w, p, c]) =>
-       `<tr><th scope="row" class="mono">${w} × <span class="selected-height">80 / 96</span></th><td>${p} panels</td><td class="mono">${c}</td><td>Folding to exterior</td></tr>`,
+   .flatMap(([w, p, c]) =>
+     [80, 96].map(
+       (h) =>
+         `<tr><th scope="row" class="mono">${w} × ${h}</th><td>${p} panels</td><td class="mono">${c}</td><td>Folding to exterior</td></tr>`,
+     ),
    )
    .join(
      '',

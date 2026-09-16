@@ -17,9 +17,6 @@
   const bar = document.querySelector('.element-progress span');
   const counter = document.querySelector('#element-counter');
   const scrollHint = document.querySelector('#element-scroll-hint');
-  const heightSelect = document.querySelector('#element-height');
-  const sizeControls = document.querySelector('.element-size-controls');
-  const heightCells = document.querySelectorAll('.selected-height');
 
   let paused = reduced.matches;
   let target = 0;
@@ -120,16 +117,6 @@
     queue();
   }
 
-  function updateSizes() {
-    heightCells.forEach((cell) => (cell.textContent = heightSelect.value));
-  }
-
-  function initializeSizes() {
-    sizeControls.style.display = 'flex';
-    heightSelect.addEventListener('change', updateSizes);
-    updateSizes();
-  }
-
   function initializeMotion() {
     initializeVideo();
     toggle.addEventListener('click', () => setPause(!paused));
@@ -141,5 +128,4 @@
   }
 
   initializeMotion();
-  initializeSizes();
 })();
