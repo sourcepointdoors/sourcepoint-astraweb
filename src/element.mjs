@@ -56,7 +56,7 @@ export function elementPage(mediaUrl = '') {
     ['Locking', 'Multi-point automatic'],
     ['Rough opening', 'At least ½ inch on all sides'],
   ];
-  return `<link rel="stylesheet" href="/element.css"><script src="/element.js" defer></script>
+  return `
  <div class="element-subnav"><a href="/series/element/">Element <span>/ Folding doors</span></a><div><a href="#element-features">Explore</a><a href="#element-sizes">Sizes</a><a href="#element-specs">Specifications</a></div></div>
  <section class="element-intro"><div><span class="eyebrow">Element series / Aluminum folding doors</span><h1>Open more<br>of your world.</h1><p>Slim profiles. Expansive glass.<br>A seamless connection between inside and out.</p><a href="#element-features" class="button">Explore the details <span aria-hidden="true">↓</span></a></div><aside><span class="element-symbol">13</span><span>Al</span><small>26.98</small><p>Aluminum.<br>Elemental by design.</p></aside></section>
  <section id="element-features" class="element-story" aria-label="Explore Element folding door features">

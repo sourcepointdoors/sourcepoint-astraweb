@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "npm run build && python3 -m http.server 4173 --directory dist",
-    "deploy": "npm run build && npx wrangler@4 deploy",
+    "deploy": "npx wrangler@4 deploy",
     "format": "prettier --write build.mjs src public/*.css public/*.js package.json wrangler.jsonc",
     "format:check": "prettier --check build.mjs src public/*.css public/*.js package.json wrangler.jsonc"
   },

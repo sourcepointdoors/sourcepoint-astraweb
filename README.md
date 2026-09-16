@@ -25,3 +25,16 @@ All pages are noindex and robots disallows crawling. This is not access control.
 Supply approved executive bios and portraits, warranty and care PDFs, specification and installation documents, dealer directory and portal URL, sales contact details, and any legal pages needed for production. No dummy product pages or dead document links are included. Odoo integration and dealer authentication are not implemented.
 
 After content approval, enable indexing and generate a sitemap for the confirmed production domain. The legal agreements supplied in the conversation are not included in this public repository.
+
+## Source organization
+
+- `build.mjs`: asset compaction and static output generation.
+- `src/pages.mjs`: route registration and page-specific styles/scripts.
+- `src/pages/`: home, collections, company, resources, contact, and not-found templates.
+- `src/layout.mjs`: shared document head, navigation, and footer.
+- `src/components.mjs`: shared links, CTAs, product cards, and draft form markup.
+- `src/warranty-data.mjs`: product IDs, display names, document URLs, and revision labels.
+- `src/warranty.mjs`: reusable warranty group, product card, and document-link rendering.
+- `public/warranty.css`: warranty styles, loaded after the base stylesheet only on the warranty page.
+
+`npm run deploy` invokes Wrangler once. Wrangler runs `npm run build` through the existing configuration hook; the npm deploy script does not run a second build. Element and warranty page assets are declared through the shared document head.
