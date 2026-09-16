@@ -13,11 +13,11 @@ export const warrantyGroups = {
       documents: [
         {
           url: '/assets/documents/warranties/forge-exterior-warranty-sp-war-004-sept-2026.pdf',
-          label: 'View Warranty PDF ↗',
+          label: 'View Warranty PDF',
         },
         {
           url: '/assets/documents/warranties/forge-exterior-care-guide-sp-war-005-sept-2026.pdf',
-          label: 'View Care & Maintenance Guide PDF ↗',
+          label: 'View Care & Maintenance Guide PDF',
         },
       ],
       notes: ['SP-WAR-004 / SP-WAR-005 · Rev. September 2026'],
@@ -50,11 +50,11 @@ export const warrantyGroups = {
       documents: [
         {
           url: '/assets/documents/warranties/element-folding-warranty-sp-war-002-sept-2026.pdf',
-          label: 'View Warranty PDF ↗',
+          label: 'View Warranty PDF',
         },
         {
           url: '/assets/documents/warranties/element-folding-care-guide-sp-war-003-sept-2026.pdf',
-          label: 'View Care & Maintenance Guide PDF ↗',
+          label: 'View Care & Maintenance Guide PDF',
         },
       ],
       notes: ['Inland, non-HVHZ · Version 1.2', 'SP-WAR-002 / SP-WAR-003 · Rev. September 2026'],
@@ -85,11 +85,11 @@ export const warrantyGroups = {
       documents: [
         {
           url: '/assets/documents/warranties/heritage-torrefied-warranty-sp-war-008-sept-2026.pdf',
-          label: 'View Warranty PDF ↗',
+          label: 'View Warranty PDF',
         },
         {
           url: '/assets/documents/warranties/heritage-torrefied-care-guide-sp-war-009-sept-2026.pdf',
-          label: 'View care & finishing guide PDF ↗',
+          label: 'View care & finishing guide PDF',
         },
       ],
       notes: ['SP-WAR-008 / SP-WAR-009 · Rev. September 2026'],
@@ -108,11 +108,11 @@ export const warrantyGroups = {
       documents: [
         {
           url: '/assets/documents/warranties/valera-fiberglass-warranty-sp-war-010-sept-2026.pdf',
-          label: 'View Warranty PDF ↗',
+          label: 'View Warranty PDF',
         },
         {
           url: '/assets/documents/warranties/valera-fiberglass-care-guide-sp-war-011-sept-2026.pdf',
-          label: 'View care & finishing guide PDF ↗',
+          label: 'View care & finishing guide PDF',
         },
       ],
       notes: ['SP-WAR-010 / SP-WAR-011 · Rev. September 2026'],

@@ -1,9 +1,10 @@
+import { icon } from './icons.mjs';
 import { series } from './catalog.mjs';
 
 export const link = (url, text, cls = '') => `<a class="${cls}" href="${url}">${text}</a>`;
 
 export const button = (url, text) =>
-  link(url, text + ' <span aria-hidden="true">↗</span>', 'button');
+  link(url, text + (' <span aria-hidden="true">' + icon('external') + '</span>'), 'button');
 
 export const intro = (label, title, copy) =>
   `<section class="page-intro"><span class="eyebrow">${label}</span><h1>${title}</h1><p>${copy}</p></section>`;
@@ -12,7 +13,7 @@ export const cta = () =>
   `<section class="cta"><div><span class="eyebrow">Build with SourcePoint</span><h2>A better opening<br>starts with a conversation.</h2></div>${button('/become-a-dealer/', 'Become a dealer')}</section>`;
 
 export const seriesCards = () =>
-  `<div class="series-grid">${series.map((s, i) => `<a class="series-card" href="/series/${s.id}/"><span class="mono">0${i + 1} / ${s.id.toUpperCase()}</span><h3>${s.name}</h3><p>${s.material}</p><span class="card-end">Explore the series <span aria-hidden="true">↗</span></span></a>`).join('')}</div>`;
+  `<div class="series-grid">${series.map((s, i) => `<a class="series-card" href="/series/${s.id}/"><span class="mono">0${i + 1} / ${s.id.toUpperCase()}</span><h3>${s.name}</h3><p>${s.material}</p><span class="card-end">Explore the series <span aria-hidden="true">${icon('external')}</span></span></a>`).join('')}</div>`;
 
 export const productImage = (s, cls = '') =>
   `<img class="${cls}" src="/assets/${s.image}" alt="${s.name} ${s.product}" loading="lazy" width="800" height="800">`;

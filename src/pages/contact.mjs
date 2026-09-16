@@ -1,3 +1,4 @@
+import { icon } from '../icons.mjs';
 import { link, intro, field, form } from '../components.mjs';
 
 export function registerContact(pages) {
@@ -17,7 +18,7 @@ export function registerContact(pages) {
       'Find your<br>SourcePoint connection.',
       'Share your location and the products you’re interested in.',
     ) +
-      `<section class="form-layout"><aside><h2>Start with the right series.</h2><p>Browse our collections while the dealer directory is being prepared.</p>${link('/catalog/', 'Explore all six series ↗', 'text-link')}</aside>${form(field('Name') + field('Company name') + field('Email', 'email') + field('Phone', 'tel') + field('ZIP code', 'text', 'zip'))}</section>`,
+      `<section class="form-layout"><aside><h2>Start with the right series.</h2><p>Browse our collections while the dealer directory is being prepared.</p>${link('/catalog/', 'Explore all six series ' + icon('external'), 'text-link')}</aside>${form(field('Name') + field('Company name') + field('Email', 'email') + field('Phone', 'tel') + field('ZIP code', 'text', 'zip'))}</section>`,
   ]);
   pages.set('/become-a-dealer/', [
     'Become a dealer',

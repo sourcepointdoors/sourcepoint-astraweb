@@ -113,6 +113,14 @@ nav {
 nav [aria-current='page'] {
   color: var(--green);
 }
+.link-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
