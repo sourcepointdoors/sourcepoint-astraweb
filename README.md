@@ -4,7 +4,10 @@ Fresh implementation for sourcepointjohn/SP-Website-Astra. No content or code wa
 
 ## Build and hosting
 
-- Build command: `npm run build` (Node 20+; no build dependencies).
+- Install development tools: `npm ci` (Node 20+).
+- Build command: `npm run build`. Pinned esbuild compacts CSS and JavaScript whitespace without bundling, identifier renaming, or syntax minification.
+- Format source: `npm run format`; verify formatting: `npm run format:check`. Prettier preserves embedded HTML template text.
+- Stylesheets retain their original cascade order; section comments identify component and responsive groups. Shared colors, fonts, and repeated radii are defined in `public/styles.css`.
 - Cloudflare Worker name: `sp-website-astra`.
 - Deploy command: `npx wrangler@4 deploy`.
 - Root directory: repository root.

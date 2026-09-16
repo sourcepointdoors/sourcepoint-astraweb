@@ -1,30 +1,200 @@
-import {mkdir,writeFile,cp,rm} from 'node:fs/promises';
-import {series} from './src/catalog.mjs';
-import {elementPage} from './src/element.mjs';
-import {mediaUrl} from './src/element-media.mjs';
-await rm('dist',{recursive:true,force:true}); await mkdir('dist',{recursive:true}); await cp('public','dist',{recursive:true});
-const link=(url,text,cls='')=>`<a class="${cls}" href="${url}">${text}</a>`;
-const button=(url,text)=>link(url,text+' <span aria-hidden="true">↗</span>','button');
-const nav=[['/catalog/','Collections'],['/company-story/','Company'],['/resources/','Resources'],['/find-a-dealer/','Find a dealer']];
-const shell=(title,body)=>`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="SourcePoint supplies premium doors and windows to the trade. Explore six product series and connect with our team."><title>${title} | SourcePoint Doors & Windows</title><link rel="icon" href="/assets/mark.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css"><script src="/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><div class="topline"><span>Built for the trade.</span><span>Atlanta, GA Warehouses</span><span class="draft">Website preview</span></div><header><a href="/" aria-label="SourcePoint home"><img class="logo" src="/assets/logo.svg" alt="SourcePoint Doors & Windows" width="220" height="70"></a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu</button><nav id="navigation" aria-label="Primary">${nav.map(n=>link(...n)).join('')}${button('/become-a-dealer/','Become a dealer')}</nav></header><main id="main">${body}</main><footer><div class="footer-top"><img class="logo" src="/assets/logo-white.svg" alt="SourcePoint Doors & Windows" width="220" height="70"><p>Premium doors & windows.<br>Built for the trade.</p>${link('/contact/','Let’s talk →','footer-contact')}</div><div class="footer-grid"><div><span class="eyebrow">Our collections</span>${series.map(s=>link('/series/'+s.id+'/',s.name)).join('')}</div><div><span class="eyebrow">SourcePoint</span>${link('/company-story/','Company story')}${link('/executive-bios/','Executive bios')}${link('/become-a-dealer/','Become a dealer')}${link('/find-a-dealer/','Find a dealer')}</div><div><span class="eyebrow">Support</span>${link('/resources/','Resources')}${link('/warranty/','Warranty & care')}${link('/contact/','Contact')}</div><div><span class="eyebrow">Our warehouses</span><p>Atlanta, GA Warehouses</p><p class="muted">Doors and windows for<br>dealers and distributors.</p></div></div><div class="footer-bottom">© 2026 SourcePoint Doors and Windows LLC <span>Built for the trade.</span></div></footer></body></html>`;
-const intro=(label,title,copy)=>`<section class="page-intro"><span class="eyebrow">${label}</span><h1>${title}</h1><p>${copy}</p></section>`;
-const cta=()=>`<section class="cta"><div><span class="eyebrow">Build with SourcePoint</span><h2>A better opening<br>starts with a conversation.</h2></div>${button('/become-a-dealer/','Become a dealer')}</section>`;
-const seriesCards=()=>`<div class="series-grid">${series.map((s,i)=>`<a class="series-card" href="/series/${s.id}/"><span class="mono">0${i+1} / ${s.id.toUpperCase()}</span><h3>${s.name}</h3><p>${s.material}</p><span class="card-end">Explore the series <span aria-hidden="true">↗</span></span></a>`).join('')}</div>`;
-const productImage=(s,cls='')=>`<img class="${cls}" src="/assets/${s.image}" alt="${s.name} ${s.product}" loading="lazy" width="800" height="800">`;
-const pages=new Map();
-pages.set('/', ['Premium doors & windows for the trade',`<section class="hero"><div class="hero-copy"><span class="eyebrow">SourcePoint / Doors & windows</span><h1>Exceptional openings.<br><em>Built for the trade.</em></h1><p>Six distinctive collections. One source for premium doors and windows.</p><div class="hero-actions">${button('/catalog/','Explore the collections')}${link('/become-a-dealer/','Partner with SourcePoint','text-link')}</div><div class="hero-note"><span class="mono">06</span><span>Product series.<br>A considered collection.</span></div></div><figure class="hero-image"><span class="eyebrow">Featured / Chateau</span><img src="/assets/chateau.jpg" alt="Chateau Steel French arch-top double door" width="1600" height="1600" fetchpriority="high"><figcaption><span>Steel French.<br><strong>A new perspective on the entrance.</strong></span>${link('/series/chateau/','Explore Chateau ↗')}</figcaption></figure></section><section class="statement"><span class="eyebrow">Your source for doors and windows</span><p>Architectural character.<br>Trade-focused supply.</p><div>From statement entrances to wide-open living spaces, SourcePoint brings a focused collection of doors and windows to dealers and distributors.</div></section><section class="section"><div class="section-heading"><div><span class="eyebrow">In focus</span><h2>Three ways to<br>make an entrance.</h2></div><p>Steel. Aluminum. Mahogany.<br>Distinct materials, lasting impressions.</p></div><div class="featured-grid">${['chateau','element','heritage'].map(id=>{const s=series.find(x=>x.id===id);return `<article class="featured"><a class="product-image" href="/series/${id}/">${productImage(s)}</a><div class="featured-info"><span class="eyebrow">${s.material}</span><h3>${link('/series/'+id+'/',s.name+' <span aria-hidden="true">↗</span>')}</h3><p>${s.product}</p></div></article>`}).join('')}</div></section><section class="section collections"><div class="section-heading"><div><span class="eyebrow">The SourcePoint collection</span><h2>Six series.<br>Every opening considered.</h2></div>${link('/catalog/','View all collections ↗','text-link')}</div>${seriesCards()}</section><section class="trade-panel"><span class="eyebrow">A relationship built around the trade</span><h2>Your next project.<br>Our shared focus.</h2><div class="trade-columns"><p>Explore the right series for your customers, review product details, and connect with the SourcePoint team.</p><div>${link('/resources/','Product resources ↗')}${link('/company-story/','Our company story ↗')}${link('/find-a-dealer/','Find a dealer ↗')}</div></div></section>${cta()}`]);
-pages.set('/catalog/',['Collections',intro('The collection','Six series.<br>One SourcePoint.','Explore doors and windows by material and architectural character.')+`<section class="section">${seriesCards()}</section>`+cta()]);
-for(const s of series){if(s.id==='element'){pages.set('/series/element/',['Element aluminum folding doors',elementPage(mediaUrl)]);continue;}pages.set('/series/'+s.id+'/',[s.name+' Series',intro('The '+s.name+' series',s.material,s.description)+(s.image?`<section class="series-detail"><div class="detail-image">${productImage(s)}</div><div><span class="eyebrow">Featured design</span><h2>${s.product}</h2><p>${s.description}</p><p>Contact our team to discuss available configurations, dimensions, finishes, and project requirements.</p>${button('/contact/','Discuss this collection')}</div></section>`:`<section class="section narrow"><h2>Explore ${s.name} with our team.</h2><p>Contact SourcePoint for product details and available configurations.</p>${button('/contact/','Ask about '+s.name)}</section>`)+cta()]);}
-pages.set('/company-story/',['Company story',intro('Our company','Built around<br>the trade.','SourcePoint Doors and Windows brings premium door and window collections to dealers and distributors.')+`<section class="story-layout"><div class="story-mark"><img src="/assets/mark.svg" alt="" width="240" height="240"></div><div><span class="eyebrow">Our focus</span><h2>Distinctive products.<br>A focused source.</h2><p>Our six series bring together wrought iron, Steel French, aluminum, torrefied mahogany, fiberglass, and uPVC.</p><p>From an individual entrance to a broader product offering, we help trade partners explore the right collection for their customers.</p><p class="eyebrow">Atlanta, GA Warehouses</p>${link('/executive-bios/','Meet the leadership team ↗','text-link')}</div></section>`+cta()]);
-pages.set('/executive-bios/',['Executive bios',intro('Our people','The team<br>behind SourcePoint.','Leadership biographies and portraits will be added to this page.')+`<section class="section narrow"><div class="notice">This draft is awaiting approved executive biographies and photography.</div>${link('/company-story/','Explore our company story ↗','text-link')}</section>`]);
-pages.set('/resources/',['Resources',intro('Product support','Details that<br>move projects forward.','Find product specifications, installation guidance, and warranty information.')+`<section class="section"><div class="resource-list"><a href="/assets/documents/warranties/sourcepoint-master-warranty-sp-war-001-sept-2026.pdf" target="_blank" rel="noopener"><h2>SourcePoint Master Warranty Terms</h2><p>SP-WAR-001 · Version 1.3 · Revised September 2026</p><span>View Master Warranty PDF ↗</span></a>${[['Product specifications','Product dimensions and technical details.'],['Installation guides','Product-specific installation documentation.'],['Catalogs & literature','Explore the SourcePoint collection.']].map(([a,b])=>`<div><h2>${a}</h2><p>${b}</p><span class="status">Documents coming soon</span></div>`).join('')}<a href="/warranty/"><h2>Warranty & care</h2><p>Warranty and care resources organized by series.</p><span>Browse warranty library ↗</span></a></div></section>`]);
-pages.set('/warranty/',['Warranty & care',`<style>.warranty-group{border-bottom:1px solid var(--line)}.warranty-group summary{display:flex;align-items:center;gap:18px;padding:28px 0;cursor:pointer;list-style:none}.warranty-group summary::-webkit-details-marker{display:none}.warranty-group summary h2{font-size:24px;margin-right:auto}.warranty-count{font-size:12px;background:#e7edea;color:var(--green);padding:6px 12px;border-radius:999px;white-space:nowrap}.warranty-chevron{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--sage);border-radius:50%;font-size:22px;transition:transform .2s}.warranty-group[open] .warranty-chevron{transform:rotate(180deg)}.warranty-group summary:hover h2{color:var(--green)}.warranty-group summary:focus-visible{outline:2px solid var(--green);outline-offset:5px;border-radius:8px}.warranty-sublist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0 0 28px 24px;border-left:2px solid var(--sage);margin:0 0 24px 4px}.warranty-bubble{border:1px solid var(--line);background:#fff;border-radius:18px;padding:24px}.warranty-bubble h3{font-size:20px;line-height:1.3;letter-spacing:-.02em;margin-bottom:18px}.warranty-bubble p{font-size:13px;color:var(--muted);margin-top:6px}@media(max-width:600px){.warranty-sublist{grid-template-columns:1fr;padding-left:14px}.warranty-group summary{gap:10px}.warranty-group summary h2{font-size:22px}.warranty-count{font-size:11px;padding:5px 9px}}</style>`+intro('Support','Protect the details.','Warranty and care documents for your SourcePoint products.')+`<section class="section"><div class="notice">Read the Master Warranty Terms together with the product-specific Limited Warranty for your product. Where terms differ, the product-specific warranty governs for that product.</div><div class="document-row"><div><h2>SourcePoint Master Warranty Terms</h2><p>SP-WAR-001 · Version 1.3 · Revised September 2026</p></div><div><a href="/assets/documents/warranties/sourcepoint-master-warranty-sp-war-001-sept-2026.pdf" target="_blank" rel="noopener">View PDF ↗</a><a href="/assets/documents/warranties/sourcepoint-master-warranty-sp-war-001-sept-2026.pdf" download>Download PDF ↓</a></div></div>${series.map(s=>{const listings=s.id==='valera'?['Valera Exterior Fiberglass Doors']:s.id==='chateau'?['Chateau Exterior Steel French Doors','Chateau Interior Steel French Doors']:s.id==='forge'?['Forge Exterior Wrought Iron Doors','Forge Interior Iron Doors']:s.id==='heritage'?['Heritage Torrefied Mahogany Doors','Heritage Wood Doors']:s.id==='element'?['Element Folding Doors','Element Casement (Swing) Doors','Element Aluminum Windows','Element Aluminum Interior Doors']:null;return listings?`<details class="warranty-group"><summary><h2>${s.name}</h2><span class="warranty-count">${listings.length} product ${listings.length===1?'type':'types'}</span><span class="warranty-chevron" aria-hidden="true">⌄</span></summary><div class="warranty-sublist">${listings.map(name=>`<article class="warranty-bubble"><h3>${name}</h3>${name==='Valera Exterior Fiberglass Doors'?`<p><a class="text-link" href="/assets/documents/warranties/valera-fiberglass-warranty-sp-war-010-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/valera-fiberglass-care-guide-sp-war-011-sept-2026.pdf" target="_blank" rel="noopener">View care &amp; finishing guide PDF ↗</a></p><p>SP-WAR-010 / SP-WAR-011 · Rev. September 2026</p>`:name==='Heritage Torrefied Mahogany Doors'?`<p><a class="text-link" href="/assets/documents/warranties/heritage-torrefied-warranty-sp-war-008-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/heritage-torrefied-care-guide-sp-war-009-sept-2026.pdf" target="_blank" rel="noopener">View care &amp; finishing guide PDF ↗</a></p><p>SP-WAR-008 / SP-WAR-009 · Rev. September 2026</p>`:name==='Element Folding Doors'?`<p><a class="text-link" href="/assets/documents/warranties/element-folding-warranty-sp-war-002-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/element-folding-care-guide-sp-war-003-sept-2026.pdf" target="_blank" rel="noopener">View Care &amp; Maintenance Guide PDF ↗</a></p><p>Inland, non-HVHZ · Version 1.2</p><p>SP-WAR-002 / SP-WAR-003 · Rev. September 2026</p>`:name==='Forge Exterior Wrought Iron Doors'?`<p><a class="text-link" href="/assets/documents/warranties/forge-exterior-warranty-sp-war-004-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/forge-exterior-care-guide-sp-war-005-sept-2026.pdf" target="_blank" rel="noopener">View Care &amp; Maintenance Guide PDF ↗</a></p><p>SP-WAR-004 / SP-WAR-005 · Rev. September 2026</p>`:'<p>Warranty — coming soon</p><p>Care guide — coming soon</p>'}</article>`).join('')}</div></details>`:`<div class="document-row"><h2>${s.name}</h2><div><span>Warranty — coming soon</span><span>Care guide — coming soon</span></div></div>`}).join('')}</section>`]);
-const field=(label,type='text',name='',wide=false)=>`<label class="${wide?'wide':''}">${label}<input type="${type}" name="${name||label.toLowerCase().replaceAll(' ','_')}" ${type==='email'?'autocomplete="email"':''}></label>`;
-const form=(fields)=>`<form class="draft-form"><div class="notice wide">Preview only. Online submissions are not enabled yet.</div>${fields}<label class="wide">How can we help?<textarea name="comment" rows="4"></textarea></label><button class="button" disabled>Submission coming soon</button></form>`;
-pages.set('/contact/',['Contact',intro('Let’s talk','Your next opening<br>starts here.','Tell us about your business or the products you’re exploring.')+`<section class="form-layout"><aside><span class="eyebrow">SourcePoint</span><h2>Atlanta, GA<br>Warehouses</h2><p>For product questions, dealer relationships, and general inquiries.</p><p class="muted">Contact details will be added before launch.</p></aside>${form(field('Name')+field('Company name')+field('Email','email')+field('Phone','tel'))}</section>`]);
-pages.set('/find-a-dealer/',['Find a dealer',intro('Connect locally','Find your<br>SourcePoint connection.','Share your location and the products you’re interested in.')+`<section class="form-layout"><aside><h2>Start with the right series.</h2><p>Browse our collections while the dealer directory is being prepared.</p>${link('/catalog/','Explore all six series ↗','text-link')}</aside>${form(field('Name')+field('Company name')+field('Email','email')+field('Phone','tel')+field('ZIP code','text','zip'))}</section>`]);
-pages.set('/become-a-dealer/',['Become a dealer',intro('Trade partnerships','Let’s build<br>your next opportunity.','Introduce your business to SourcePoint and explore a dealer relationship.')+`<section class="form-layout"><aside><span class="eyebrow">Built for the trade</span><h2>Six collections.<br>One conversation.</h2><p>Tell us about your business, your customers, and the product series you’re interested in.</p></aside>${form(field('Company name')+field('Business type')+field('Contact name')+field('Email','email')+field('Phone','tel')+field('City')+field('State')+field('ZIP code','text','zip'))}</section>`]);
-pages.set('/404.html',['Page not found',intro('404','This opening<br>leads elsewhere.','The page you’re looking for could not be found.')+`<section class="section">${button('/','Return home')}</section>`]);
-for(const [path,[title,body]]of pages){const file=path.endsWith('.html')?'dist'+path:'dist'+path+'index.html';await mkdir(file.slice(0,file.lastIndexOf('/')),{recursive:true});await writeFile(file,shell(title,body));}
-await writeFile('dist/robots.txt','User-agent: *\nDisallow: /\n');
+import { transform } from 'esbuild';
+import { mkdir, writeFile, readFile, cp, rm } from 'node:fs/promises';
+import { series } from './src/catalog.mjs';
+import { elementPage } from './src/element.mjs';
+import { mediaUrl } from './src/element-media.mjs';
+await rm('dist', { recursive: true, force: true });
+await mkdir('dist', { recursive: true });
+await cp('public', 'dist', { recursive: true });
+// Compact only whitespace; preserve identifiers, syntax, and CSS rule order.
+for (const asset of ['styles.css', 'element.css', 'site.js', 'element.js']) {
+  const loader = asset.endsWith('.css') ? 'css' : 'js';
+  const source = await readFile('public/' + asset, 'utf8');
+  const { code } = await transform(source, {
+    loader,
+    minifyWhitespace: true,
+    minifySyntax: false,
+    minifyIdentifiers: false,
+    legalComments: 'none',
+    charset: 'utf8',
+    target: 'esnext',
+  });
+  await writeFile('dist/' + asset, code);
+}
+
+const link = (url, text, cls = '') => `<a class="${cls}" href="${url}">${text}</a>`;
+const button = (url, text) => link(url, text + ' <span aria-hidden="true">↗</span>', 'button');
+const nav = [
+  ['/catalog/', 'Collections'],
+  ['/company-story/', 'Company'],
+  ['/resources/', 'Resources'],
+  ['/find-a-dealer/', 'Find a dealer'],
+];
+const shell = (title, body) =>
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="SourcePoint supplies premium doors and windows to the trade. Explore six product series and connect with our team."><title>${title} | SourcePoint Doors & Windows</title><link rel="icon" href="/assets/mark.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css"><script src="/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><div class="topline"><span>Built for the trade.</span><span>Atlanta, GA Warehouses</span><span class="draft">Website preview</span></div><header><a href="/" aria-label="SourcePoint home"><img class="logo" src="/assets/logo.svg" alt="SourcePoint Doors & Windows" width="220" height="70"></a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu</button><nav id="navigation" aria-label="Primary">${nav.map((n) => link(...n)).join('')}${button('/become-a-dealer/', 'Become a dealer')}</nav></header><main id="main">${body}</main><footer><div class="footer-top"><img class="logo" src="/assets/logo-white.svg" alt="SourcePoint Doors & Windows" width="220" height="70"><p>Premium doors & windows.<br>Built for the trade.</p>${link('/contact/', 'Let’s talk →', 'footer-contact')}</div><div class="footer-grid"><div><span class="eyebrow">Our collections</span>${series.map((s) => link('/series/' + s.id + '/', s.name)).join('')}</div><div><span class="eyebrow">SourcePoint</span>${link('/company-story/', 'Company story')}${link('/executive-bios/', 'Executive bios')}${link('/become-a-dealer/', 'Become a dealer')}${link('/find-a-dealer/', 'Find a dealer')}</div><div><span class="eyebrow">Support</span>${link('/resources/', 'Resources')}${link('/warranty/', 'Warranty & care')}${link('/contact/', 'Contact')}</div><div><span class="eyebrow">Our warehouses</span><p>Atlanta, GA Warehouses</p><p class="muted">Doors and windows for<br>dealers and distributors.</p></div></div><div class="footer-bottom">© 2026 SourcePoint Doors and Windows LLC <span>Built for the trade.</span></div></footer></body></html>`;
+const intro = (label, title, copy) =>
+  `<section class="page-intro"><span class="eyebrow">${label}</span><h1>${title}</h1><p>${copy}</p></section>`;
+const cta = () =>
+  `<section class="cta"><div><span class="eyebrow">Build with SourcePoint</span><h2>A better opening<br>starts with a conversation.</h2></div>${button('/become-a-dealer/', 'Become a dealer')}</section>`;
+const seriesCards = () =>
+  `<div class="series-grid">${series.map((s, i) => `<a class="series-card" href="/series/${s.id}/"><span class="mono">0${i + 1} / ${s.id.toUpperCase()}</span><h3>${s.name}</h3><p>${s.material}</p><span class="card-end">Explore the series <span aria-hidden="true">↗</span></span></a>`).join('')}</div>`;
+const productImage = (s, cls = '') =>
+  `<img class="${cls}" src="/assets/${s.image}" alt="${s.name} ${s.product}" loading="lazy" width="800" height="800">`;
+const pages = new Map();
+pages.set('/', [
+  'Premium doors & windows for the trade',
+  `<section class="hero"><div class="hero-copy"><span class="eyebrow">SourcePoint / Doors & windows</span><h1>Exceptional openings.<br><em>Built for the trade.</em></h1><p>Six distinctive collections. One source for premium doors and windows.</p><div class="hero-actions">${button('/catalog/', 'Explore the collections')}${link('/become-a-dealer/', 'Partner with SourcePoint', 'text-link')}</div><div class="hero-note"><span class="mono">06</span><span>Product series.<br>A considered collection.</span></div></div><figure class="hero-image"><span class="eyebrow">Featured / Chateau</span><img src="/assets/chateau.jpg" alt="Chateau Steel French arch-top double door" width="1600" height="1600" fetchpriority="high"><figcaption><span>Steel French.<br><strong>A new perspective on the entrance.</strong></span>${link('/series/chateau/', 'Explore Chateau ↗')}</figcaption></figure></section><section class="statement"><span class="eyebrow">Your source for doors and windows</span><p>Architectural character.<br>Trade-focused supply.</p><div>From statement entrances to wide-open living spaces, SourcePoint brings a focused collection of doors and windows to dealers and distributors.</div></section><section class="section"><div class="section-heading"><div><span class="eyebrow">In focus</span><h2>Three ways to<br>make an entrance.</h2></div><p>Steel. Aluminum. Mahogany.<br>Distinct materials, lasting impressions.</p></div><div class="featured-grid">${[
+    'chateau',
+    'element',
+    'heritage',
+  ]
+    .map((id) => {
+      const s = series.find((x) => x.id === id);
+      return `<article class="featured"><a class="product-image" href="/series/${id}/">${productImage(s)}</a><div class="featured-info"><span class="eyebrow">${s.material}</span><h3>${link('/series/' + id + '/', s.name + ' <span aria-hidden="true">↗</span>')}</h3><p>${s.product}</p></div></article>`;
+    })
+    .join(
+      '',
+    )}</div></section><section class="section collections"><div class="section-heading"><div><span class="eyebrow">The SourcePoint collection</span><h2>Six series.<br>Every opening considered.</h2></div>${link('/catalog/', 'View all collections ↗', 'text-link')}</div>${seriesCards()}</section><section class="trade-panel"><span class="eyebrow">A relationship built around the trade</span><h2>Your next project.<br>Our shared focus.</h2><div class="trade-columns"><p>Explore the right series for your customers, review product details, and connect with the SourcePoint team.</p><div>${link('/resources/', 'Product resources ↗')}${link('/company-story/', 'Our company story ↗')}${link('/find-a-dealer/', 'Find a dealer ↗')}</div></div></section>${cta()}`,
+]);
+pages.set('/catalog/', [
+  'Collections',
+  intro(
+    'The collection',
+    'Six series.<br>One SourcePoint.',
+    'Explore doors and windows by material and architectural character.',
+  ) +
+    `<section class="section">${seriesCards()}</section>` +
+    cta(),
+]);
+for (const s of series) {
+  if (s.id === 'element') {
+    pages.set('/series/element/', ['Element aluminum folding doors', elementPage(mediaUrl)]);
+    continue;
+  }
+  pages.set('/series/' + s.id + '/', [
+    s.name + ' Series',
+    intro('The ' + s.name + ' series', s.material, s.description) +
+      (s.image
+        ? `<section class="series-detail"><div class="detail-image">${productImage(s)}</div><div><span class="eyebrow">Featured design</span><h2>${s.product}</h2><p>${s.description}</p><p>Contact our team to discuss available configurations, dimensions, finishes, and project requirements.</p>${button('/contact/', 'Discuss this collection')}</div></section>`
+        : `<section class="section narrow"><h2>Explore ${s.name} with our team.</h2><p>Contact SourcePoint for product details and available configurations.</p>${button('/contact/', 'Ask about ' + s.name)}</section>`) +
+      cta(),
+  ]);
+}
+pages.set('/company-story/', [
+  'Company story',
+  intro(
+    'Our company',
+    'Built around<br>the trade.',
+    'SourcePoint Doors and Windows brings premium door and window collections to dealers and distributors.',
+  ) +
+    `<section class="story-layout"><div class="story-mark"><img src="/assets/mark.svg" alt="" width="240" height="240"></div><div><span class="eyebrow">Our focus</span><h2>Distinctive products.<br>A focused source.</h2><p>Our six series bring together wrought iron, Steel French, aluminum, torrefied mahogany, fiberglass, and uPVC.</p><p>From an individual entrance to a broader product offering, we help trade partners explore the right collection for their customers.</p><p class="eyebrow">Atlanta, GA Warehouses</p>${link('/executive-bios/', 'Meet the leadership team ↗', 'text-link')}</div></section>` +
+    cta(),
+]);
+pages.set('/executive-bios/', [
+  'Executive bios',
+  intro(
+    'Our people',
+    'The team<br>behind SourcePoint.',
+    'Leadership biographies and portraits will be added to this page.',
+  ) +
+    `<section class="section narrow"><div class="notice">This draft is awaiting approved executive biographies and photography.</div>${link('/company-story/', 'Explore our company story ↗', 'text-link')}</section>`,
+]);
+pages.set('/resources/', [
+  'Resources',
+  intro(
+    'Product support',
+    'Details that<br>move projects forward.',
+    'Find product specifications, installation guidance, and warranty information.',
+  ) +
+    `<section class="section"><div class="resource-list"><a href="/assets/documents/warranties/sourcepoint-master-warranty-sp-war-001-sept-2026.pdf" target="_blank" rel="noopener"><h2>SourcePoint Master Warranty Terms</h2><p>SP-WAR-001 · Version 1.3 · Revised September 2026</p><span>View Master Warranty PDF ↗</span></a>${[
+      ['Product specifications', 'Product dimensions and technical details.'],
+      ['Installation guides', 'Product-specific installation documentation.'],
+      ['Catalogs & literature', 'Explore the SourcePoint collection.'],
+    ]
+      .map(
+        ([a, b]) =>
+          `<div><h2>${a}</h2><p>${b}</p><span class="status">Documents coming soon</span></div>`,
+      )
+      .join(
+        '',
+      )}<a href="/warranty/"><h2>Warranty & care</h2><p>Warranty and care resources organized by series.</p><span>Browse warranty library ↗</span></a></div></section>`,
+]);
+pages.set('/warranty/', [
+  'Warranty & care',
+  `<style>.warranty-group{border-bottom:1px solid var(--line)}.warranty-group summary{display:flex;align-items:center;gap:18px;padding:28px 0;cursor:pointer;list-style:none}.warranty-group summary::-webkit-details-marker{display:none}.warranty-group summary h2{font-size:24px;margin-right:auto}.warranty-count{font-size:12px;background:var(--surface-soft);color:var(--green);padding:6px 12px;border-radius:999px;white-space:nowrap}.warranty-chevron{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--sage);border-radius:50%;font-size:22px;transition:transform .2s}.warranty-group[open] .warranty-chevron{transform:rotate(180deg)}.warranty-group summary:hover h2{color:var(--green)}.warranty-group summary:focus-visible{outline:2px solid var(--green);outline-offset:5px;border-radius:8px}.warranty-sublist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0 0 28px 24px;border-left:2px solid var(--sage);margin:0 0 24px 4px}.warranty-bubble{border:1px solid var(--line);background:var(--white);border-radius:18px;padding:24px}.warranty-bubble h3{font-size:20px;line-height:1.3;letter-spacing:-.02em;margin-bottom:18px}.warranty-bubble p{font-size:13px;color:var(--muted);margin-top:6px}@media(max-width:600px){.warranty-sublist{grid-template-columns:1fr;padding-left:14px}.warranty-group summary{gap:10px}.warranty-group summary h2{font-size:22px}.warranty-count{font-size:11px;padding:5px 9px}}</style>` +
+    intro(
+      'Support',
+      'Protect the details.',
+      'Warranty and care documents for your SourcePoint products.',
+    ) +
+    `<section class="section"><div class="notice">Read the Master Warranty Terms together with the product-specific Limited Warranty for your product. Where terms differ, the product-specific warranty governs for that product.</div><div class="document-row"><div><h2>SourcePoint Master Warranty Terms</h2><p>SP-WAR-001 · Version 1.3 · Revised September 2026</p></div><div><a href="/assets/documents/warranties/sourcepoint-master-warranty-sp-war-001-sept-2026.pdf" target="_blank" rel="noopener">View PDF ↗</a><a href="/assets/documents/warranties/sourcepoint-master-warranty-sp-war-001-sept-2026.pdf" download>Download PDF ↓</a></div></div>${series
+      .map((s) => {
+        const listings =
+          s.id === 'valera'
+            ? ['Valera Exterior Fiberglass Doors']
+            : s.id === 'chateau'
+              ? ['Chateau Exterior Steel French Doors', 'Chateau Interior Steel French Doors']
+              : s.id === 'forge'
+                ? ['Forge Exterior Wrought Iron Doors', 'Forge Interior Iron Doors']
+                : s.id === 'heritage'
+                  ? ['Heritage Torrefied Mahogany Doors', 'Heritage Wood Doors']
+                  : s.id === 'element'
+                    ? [
+                        'Element Folding Doors',
+                        'Element Casement (Swing) Doors',
+                        'Element Aluminum Windows',
+                        'Element Aluminum Interior Doors',
+                      ]
+                    : null;
+        return listings
+          ? `<details class="warranty-group"><summary><h2>${s.name}</h2><span class="warranty-count">${listings.length} product ${listings.length === 1 ? 'type' : 'types'}</span><span class="warranty-chevron" aria-hidden="true">⌄</span></summary><div class="warranty-sublist">${listings.map((name) => `<article class="warranty-bubble"><h3>${name}</h3>${name === 'Valera Exterior Fiberglass Doors' ? `<p><a class="text-link" href="/assets/documents/warranties/valera-fiberglass-warranty-sp-war-010-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/valera-fiberglass-care-guide-sp-war-011-sept-2026.pdf" target="_blank" rel="noopener">View care &amp; finishing guide PDF ↗</a></p><p>SP-WAR-010 / SP-WAR-011 · Rev. September 2026</p>` : name === 'Heritage Torrefied Mahogany Doors' ? `<p><a class="text-link" href="/assets/documents/warranties/heritage-torrefied-warranty-sp-war-008-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/heritage-torrefied-care-guide-sp-war-009-sept-2026.pdf" target="_blank" rel="noopener">View care &amp; finishing guide PDF ↗</a></p><p>SP-WAR-008 / SP-WAR-009 · Rev. September 2026</p>` : name === 'Element Folding Doors' ? `<p><a class="text-link" href="/assets/documents/warranties/element-folding-warranty-sp-war-002-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/element-folding-care-guide-sp-war-003-sept-2026.pdf" target="_blank" rel="noopener">View Care &amp; Maintenance Guide PDF ↗</a></p><p>Inland, non-HVHZ · Version 1.2</p><p>SP-WAR-002 / SP-WAR-003 · Rev. September 2026</p>` : name === 'Forge Exterior Wrought Iron Doors' ? `<p><a class="text-link" href="/assets/documents/warranties/forge-exterior-warranty-sp-war-004-sept-2026.pdf" target="_blank" rel="noopener">View Warranty PDF ↗</a></p><p><a class="text-link" href="/assets/documents/warranties/forge-exterior-care-guide-sp-war-005-sept-2026.pdf" target="_blank" rel="noopener">View Care &amp; Maintenance Guide PDF ↗</a></p><p>SP-WAR-004 / SP-WAR-005 · Rev. September 2026</p>` : '<p>Warranty — coming soon</p><p>Care guide — coming soon</p>'}</article>`).join('')}</div></details>`
+          : `<div class="document-row"><h2>${s.name}</h2><div><span>Warranty — coming soon</span><span>Care guide — coming soon</span></div></div>`;
+      })
+      .join('')}</section>`,
+]);
+const field = (label, type = 'text', name = '', wide = false) =>
+  `<label class="${wide ? 'wide' : ''}">${label}<input type="${type}" name="${name || label.toLowerCase().replaceAll(' ', '_')}" ${type === 'email' ? 'autocomplete="email"' : ''}></label>`;
+const form = (fields) =>
+  `<form class="draft-form"><div class="notice wide">Preview only. Online submissions are not enabled yet.</div>${fields}<label class="wide">How can we help?<textarea name="comment" rows="4"></textarea></label><button class="button" disabled>Submission coming soon</button></form>`;
+pages.set('/contact/', [
+  'Contact',
+  intro(
+    'Let’s talk',
+    'Your next opening<br>starts here.',
+    'Tell us about your business or the products you’re exploring.',
+  ) +
+    `<section class="form-layout"><aside><span class="eyebrow">SourcePoint</span><h2>Atlanta, GA<br>Warehouses</h2><p>For product questions, dealer relationships, and general inquiries.</p><p class="muted">Contact details will be added before launch.</p></aside>${form(field('Name') + field('Company name') + field('Email', 'email') + field('Phone', 'tel'))}</section>`,
+]);
+pages.set('/find-a-dealer/', [
+  'Find a dealer',
+  intro(
+    'Connect locally',
+    'Find your<br>SourcePoint connection.',
+    'Share your location and the products you’re interested in.',
+  ) +
+    `<section class="form-layout"><aside><h2>Start with the right series.</h2><p>Browse our collections while the dealer directory is being prepared.</p>${link('/catalog/', 'Explore all six series ↗', 'text-link')}</aside>${form(field('Name') + field('Company name') + field('Email', 'email') + field('Phone', 'tel') + field('ZIP code', 'text', 'zip'))}</section>`,
+]);
+pages.set('/become-a-dealer/', [
+  'Become a dealer',
+  intro(
+    'Trade partnerships',
+    'Let’s build<br>your next opportunity.',
+    'Introduce your business to SourcePoint and explore a dealer relationship.',
+  ) +
+    `<section class="form-layout"><aside><span class="eyebrow">Built for the trade</span><h2>Six collections.<br>One conversation.</h2><p>Tell us about your business, your customers, and the product series you’re interested in.</p></aside>${form(field('Company name') + field('Business type') + field('Contact name') + field('Email', 'email') + field('Phone', 'tel') + field('City') + field('State') + field('ZIP code', 'text', 'zip'))}</section>`,
+]);
+pages.set('/404.html', [
+  'Page not found',
+  intro(
+    '404',
+    'This opening<br>leads elsewhere.',
+    'The page you’re looking for could not be found.',
+  ) + `<section class="section">${button('/', 'Return home')}</section>`,
+]);
+for (const [path, [title, body]] of pages) {
+  const file = path.endsWith('.html') ? 'dist' + path : 'dist' + path + 'index.html';
+  await mkdir(file.slice(0, file.lastIndexOf('/')), { recursive: true });
+  await writeFile(file, shell(title, body));
+}
+await writeFile('dist/robots.txt', 'User-agent: *\nDisallow: /\n');
 console.log(`Built ${pages.size} pages. Draft remains noindex until launch review.`);
